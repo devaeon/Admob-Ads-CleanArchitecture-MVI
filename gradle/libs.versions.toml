@@ -1,0 +1,93 @@
+[versions]
+
+# Android SDK
+androidCompileSdk = "35"
+androidMinSdk = "24"
+
+# Build script
+googleFirebaseCrashlyticsGradle = "3.0.3"
+googleServices = "4.4.2"
+androidGradlePlugin = "8.7.3"
+java = "21"
+kotlin = "2.1.20"
+kotlinxCoroutines = "1.10.0"
+ksp = "2.1.20-1.0.32"
+
+
+# Androidx
+androidxAnnotation = "1.9.1"
+androidxAppCompat = "1.7.0"
+androidxCardView = "1.0.0"
+androidxConstraintLayout = "2.2.1"
+androidxCoreKtx = "1.16.0"
+androidxDatastore = "1.1.4"
+androidxFragmentKtx = "1.8.6"
+androidxLifecycle = "2.8.7"
+androidxLifecycleExtension = "2.2.0"
+androidxNavigation = "2.8.9"
+androidxRecyclerView = "1.4.0"
+androidxSplashScreen = "1.0.1"
+
+
+# Other
+airbnbLottie = "6.6.2"
+googleMaterial = "1.12.0"
+googleDaggerHilt = "2.55"
+
+# PlayStore only
+googleFirebaseBom = "33.12.0"
+googleUserMessaging = "3.2.0"
+googleGmsAds = "24.2.0"
+activity = "1.10.1"
+
+
+
+[libraries]
+# Androidx
+androidx-annotation = { group = "androidx.annotation", name = "annotation", version.ref = "androidxAnnotation" }
+androidx-appCompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppCompat" }
+androidx-cardView = { group = "androidx.cardview", name = "cardview", version.ref = "androidxCardView" }
+androidx-constraintLayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "androidxConstraintLayout" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCoreKtx" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
+androidx-datastore = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "androidxDatastore" }
+androidx-fragment-ktx = { group = "androidx.fragment", name = "fragment-ktx", version.ref = "androidxFragmentKtx" }
+androidx-recyclerView = { group = "androidx.recyclerview", name = "recyclerview", version.ref = "androidxRecyclerView" }
+androidx-lifecycle-common-java8 = { group = "androidx.lifecycle", name = "lifecycle-common-java8", version.ref = "androidxLifecycle" }
+androidx-lifecycle-extensions = { group = "androidx.lifecycle", name = "lifecycle-extensions", version.ref = "androidxLifecycleExtension" }
+androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
+androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "androidxLifecycle" }
+androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "androidxNavigation" }
+androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigation" }
+
+# Other
+airbnb-lottie = { group = "com.airbnb.android", name = "lottie", version.ref = "airbnbLottie" }
+google-material = { group = "com.google.android.material", name = "material", version.ref = "googleMaterial" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinxCoroutines" }
+google-dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "googleDaggerHilt" }
+google-dagger-hilt-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "googleDaggerHilt" }
+
+# PlayStore only.
+google-firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "googleFirebaseBom" }
+google-firebase-crashlytics-ktx = { group = "com.google.firebase", name = "firebase-crashlytics-ktx" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
+firebase-config = { group = "com.google.firebase", name = "firebase-config"}
+
+google-dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "googleDaggerHilt" }
+google-userMessaging = { group = "com.google.android.ump", name = "user-messaging-platform", version.ref = "googleUserMessaging" }
+google-gms-ads = { group = "com.google.android.gms", name = "play-services-ads", version.ref = "googleGmsAds" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
+
+
+[plugins]
+androidApplication = { id = "com.android.application", version.ref = "androidGradlePlugin" }
+androidxNavigationSafeArgs = { id = "androidx.navigation.safeargs.kotlin", version.ref = "androidxNavigation" }
+googleDaggerHiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "googleDaggerHilt" }
+googleKsp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+googleGms = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+googleCrashlytics = { id = "com.google.firebase.crashlytics", version.ref = "googleFirebaseCrashlyticsGradle" }
+jetbrainsKotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+
+
+

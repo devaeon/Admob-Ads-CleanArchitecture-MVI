@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984968555722",
+    "project_id": "ads-template-8ac46",
+    "storage_bucket": "ads-template-8ac46.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984968555722:android:43dbdfc60439cf189f9833",
+        "android_client_info": {
+          "package_name": "com.devaeon.adsTemplate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb-yRbgOY3OhK6OzeydnOEJUEzob0B_L8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

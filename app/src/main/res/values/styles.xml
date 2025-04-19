@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButton" parent="Widget.Material3.Button">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Style for an text button -->
+    <style name="AppTheme.Widget.TextButtonOutlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <!-- Style for an indeterminate circular progress in a outlined button -->
+    <style name="AppTheme.Widget.CircularProgressIndicator.Button" parent="Widget.Material3.CircularProgressIndicator.ExtraSmall">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="showAnimationBehavior">inward</item>
+    </style>
+
+    <!-- Style for an indeterminate circular progress in a button -->
+    <style name="AppTheme.Widget.CircularProgressIndicator.Button.Colored">
+        <item name="indicatorColor">?attr/colorOnPrimary</item>
+    </style>
+</resources>
