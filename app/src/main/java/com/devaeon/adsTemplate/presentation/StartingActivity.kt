@@ -67,5 +67,4 @@ class StartingActivity : BaseActivity<ActivityStartingBinding>(ActivityStartingB
         }
     }
 }
-
 private const val TAG = "StartingActivityLogsInformation"
