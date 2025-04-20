@@ -5,14 +5,14 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.util.Log
 
-import com.devaeon.adsTemplate.presentation.state.RemoteAdState
+import com.devaeon.adsTemplate.domain.model.RemoteAdState
 
 /**
  * Use to simulate the ad state while in debug.
  *
  * The following command will change the ad state:
  * adb shell "am broadcast \
- *     -a com.buzbuz.smartautoclicker.feature.revenue.data.ads.TEST_STATE \
+ *     -a com.devaeon.adsTemplate.data.ads.TEST_STATE \
  *     --es EXTRA_STATE RemoteAdState"
  *
  * With RemoteAdState being the class name of the wanted [RemoteAdState] or null.
@@ -48,7 +48,7 @@ internal class DebugAdStateReceiver(
     }
 }
 
-private const val BROADCAST_ACTION = "com.buzbuz.smartautoclicker.feature.revenue.data.ads.TEST_STATE"
+private const val BROADCAST_ACTION = "com.devaeon.adsTemplate.data.ads.TEST_STATE"
 private const val EXTRA_STATE = "EXTRA_STATE"
 
 private const val TAG = "DebugAdStateReceiver"

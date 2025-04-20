@@ -1,4 +1,4 @@
-package com.devaeon.adsTemplate.presentation.state
+package com.devaeon.adsTemplate.domain.model
 
 internal sealed class RemoteAdState {
 

@@ -1,9 +1,10 @@
 package com.devaeon.adsTemplate.core.utilities.manager
 
 import android.content.SharedPreferences
+import javax.inject.Inject
 
 
-class SharedPreferenceUtils(private val sharedPreferences: SharedPreferences) {
+class SharedPreferenceUtils @Inject constructor(private val sharedPreferences: SharedPreferences) {
 
     private val billingRequireKey = "isAppPurchased"
     private val isShowFirstScreenKey = "showFirstScreen"

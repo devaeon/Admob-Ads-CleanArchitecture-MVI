@@ -1,6 +1,11 @@
-package com.devaeon.adsTemplate.core.utilities.firebase
+package com.devaeon.adsTemplate.data.source
 
 import android.util.Log
+import com.devaeon.adsTemplate.core.utilities.firebase.FirebaseUtils.recordException
+import com.devaeon.adsTemplate.core.utilities.manager.InternetManager
+import com.devaeon.adsTemplate.core.utilities.manager.SharedPreferenceUtils
+import com.devaeon.adsTemplate.core.utilities.utils.Constants
+import com.devaeon.adsTemplate.core.utilities.utils.Constants.TAG_REMOTE
 import com.google.firebase.Firebase
 import com.google.firebase.remoteconfig.ConfigUpdate
 import com.google.firebase.remoteconfig.ConfigUpdateListener
@@ -9,13 +14,14 @@ import com.google.firebase.remoteconfig.FirebaseRemoteConfigException
 import com.google.firebase.remoteconfig.get
 import com.google.firebase.remoteconfig.remoteConfig
 import com.google.firebase.remoteconfig.remoteConfigSettings
-import com.devaeon.adsTemplate.core.utilities.firebase.FirebaseUtils.recordException
-import com.devaeon.adsTemplate.core.utilities.manager.InternetManager
-import com.devaeon.adsTemplate.core.utilities.manager.SharedPreferenceUtils
-import com.devaeon.adsTemplate.core.utilities.utils.Constants.TAG
-import com.devaeon.adsTemplate.core.utilities.utils.Constants.TAG_REMOTE
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RemoteConfiguration(private val internetManager: InternetManager, private val sharedPreferenceUtils: SharedPreferenceUtils) {
+@Singleton
+internal class RemoteAdsDataSource @Inject constructor(
+    private val internetManager: InternetManager,
+    private val sharedPreferenceUtils: SharedPreferenceUtils
+) {
 
     private val remoteConfig: FirebaseRemoteConfig by lazy { Firebase.remoteConfig }
 
@@ -106,6 +112,6 @@ class RemoteConfiguration(private val internetManager: InternetManager, private 
                 ex.recordException("RemoteConfiguration: updateRemoteValues")
             }
         }
-        Log.d(TAG, "RemoteConfiguration: updateRemoteValues: Fetched Successfully")
+        Log.d(Constants.TAG, "RemoteConfiguration: updateRemoteValues: Fetched Successfully")
     }
 }

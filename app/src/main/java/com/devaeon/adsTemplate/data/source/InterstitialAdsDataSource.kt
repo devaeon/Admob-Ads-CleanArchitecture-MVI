@@ -11,7 +11,7 @@ import com.devaeon.adsTemplate.data.configuration.getAdsDebugTestDevicesIds
 import com.devaeon.adsTemplate.di.Dispatcher
 import com.devaeon.adsTemplate.di.HiltCoroutineDispatchers
 import com.devaeon.adsTemplate.domain.repository.IAdsSdk
-import com.devaeon.adsTemplate.presentation.state.RemoteAdState
+import com.devaeon.adsTemplate.domain.model.RemoteAdState
 
 import dagger.hilt.android.qualifiers.ApplicationContext
 

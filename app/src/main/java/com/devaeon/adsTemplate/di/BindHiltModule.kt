@@ -11,10 +11,11 @@ import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(SingletonComponent::class)
-abstract class HiltModule{
+abstract class BindHiltModule{
     @Binds
     abstract fun bindAdsRepository(adsRepositoryImpl: AdsRepositoryImpl): AdsRepository
 
     @Binds
     abstract fun bindAdsSdk(googleAdsSdk: GoogleAdsSdk): IAdsSdk
 }
+

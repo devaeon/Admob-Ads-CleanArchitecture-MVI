@@ -1,48 +1,73 @@
 package com.devaeon.adsTemplate.presentation.viewModel
 
-import android.app.Activity
-import android.content.Context
 import androidx.lifecycle.ViewModel
-import com.devaeon.adsTemplate.R
-import com.devaeon.adsTemplate.core.ui.bindings.buttons.LoadableButtonState
-import com.devaeon.adsTemplate.domain.model.AdState
+import androidx.lifecycle.viewModelScope
 import com.devaeon.adsTemplate.domain.repository.AdsRepository
+import com.devaeon.adsTemplate.presentation.intent.AdsIntent
+import com.devaeon.adsTemplate.presentation.state.AdsViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.SendChannel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class AdsViewModel @Inject constructor(private val adsRepository: AdsRepository) : ViewModel() {
 
-    val adsState: StateFlow<AdState> =adsRepository.adsState
+    private val _viewState = MutableStateFlow(AdsViewState())
+    val viewState: StateFlow<AdsViewState> = _viewState.asStateFlow()
 
+    private val intentChannel = Channel<AdsIntent>(Channel.UNLIMITED)
+    val intents: SendChannel<AdsIntent> = intentChannel
 
-    fun loadInterstitialAdIfNeeded(context: Context) {
-        adsRepository.loadInterstitialAdIfNeeded(context)
+    init {
+        collectIntents()
+        collectRepositoryState()
     }
 
-    fun showInterstitialAd(activity: Activity) {
-        adsRepository.showInterstitialAd(activity)
+    private fun collectIntents() {
+        viewModelScope.launch {
+            intentChannel.consumeAsFlow().collect { intent ->
+                when (intent) {
+                    is AdsIntent.FetchRemoteConfiguration -> {
+                        adsRepository.fetchRemoteConfiguration { success ->
+                            if (success) {
+                                adsRepository.loadInterstitialAdIfNeeded()
+                            } else {
+                                // Handle error if needed
+                            }
+                        }
+                    }
+                    is AdsIntent.LoadInterstitialAd -> adsRepository.loadInterstitialAdIfNeeded()
+                    is AdsIntent.ShowInterstitialAd -> adsRepository.showInterstitialAd(intent.activity)
+                }
+            }
+        }
     }
 
-    sealed class DialogState {
-
-        internal data class NotPurchased(val adButtonState: LoadableButtonState): DialogState()
-
-        internal data object Purchased : DialogState()
-        internal data object AdShowing : DialogState()
-        internal data object AdWatched : DialogState()
+    private fun collectRepositoryState() {
+        viewModelScope.launch {
+            combine(
+                adsRepository.adsState,
+                adsRepository.isPrivacySettingRequired,
+                adsRepository.userConsentState
+            ) { adState, privacyRequired, userConsent ->
+                AdsViewState(
+                    adState = adState,
+                    isPrivacySettingRequired = privacyRequired,
+                    userConsentState = userConsent
+                )
+            }.distinctUntilChanged()
+                .collect {
+                _viewState.value = it
+            }
+        }
     }
-
-    private fun AdState.toAdButtonState(context: Context): LoadableButtonState = when (this) {
-        AdState.INITIALIZED, AdState.LOADING -> LoadableButtonState.Loading(text = context.getString(R.string.button_text_watch_ad_loading))
-
-        AdState.ERROR, AdState.READY -> LoadableButtonState.Loaded.Enabled(text = context.getString(R.string.button_text_watch_ad))
-
-        AdState.SHOWING, AdState.VALIDATED -> LoadableButtonState.Loaded.Disabled(text = context.getString(R.string.button_text_watch_ad))
-
-        AdState.NOT_INITIALIZED -> LoadableButtonState.Loaded.Disabled(text = context.getString(R.string.button_text_watch_ad_error))
-    }
-
 }

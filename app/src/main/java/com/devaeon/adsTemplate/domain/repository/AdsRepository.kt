@@ -13,6 +13,9 @@ interface AdsRepository {
 
     val adsState: StateFlow<AdState>
 
-    fun loadInterstitialAdIfNeeded(context: Context)
+    fun fetchRemoteConfiguration(fetchCallback: (Boolean) -> Unit   )
+
+    fun loadInterstitialAdIfNeeded()
     fun showInterstitialAd(activity: Activity)
+
 }

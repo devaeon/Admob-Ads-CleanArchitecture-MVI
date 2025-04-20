@@ -3,9 +3,10 @@ package com.devaeon.adsTemplate.core.utilities.manager
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import com.devaeon.adsTemplate.core.utilities.firebase.FirebaseUtils.recordException
+import javax.inject.Inject
 
 
-class InternetManager(private val connectivityManager: ConnectivityManager) {
+class InternetManager @Inject constructor(private val connectivityManager: ConnectivityManager) {
 
     val isInternetConnected: Boolean
         get() {

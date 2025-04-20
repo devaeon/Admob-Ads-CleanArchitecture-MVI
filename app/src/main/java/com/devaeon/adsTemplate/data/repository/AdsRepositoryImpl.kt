@@ -3,14 +3,15 @@ package com.devaeon.adsTemplate.data.repository
 import android.app.Activity
 import android.content.Context
 import android.util.Log
+import com.devaeon.adsTemplate.data.source.InterstitialAdsDataSource
+import com.devaeon.adsTemplate.data.source.RemoteAdsDataSource
+import com.devaeon.adsTemplate.data.source.UserConsentDataSource
 import com.devaeon.adsTemplate.di.Dispatcher
 import com.devaeon.adsTemplate.di.HiltCoroutineDispatchers
-import com.devaeon.adsTemplate.data.source.InterstitialAdsDataSource
-import com.devaeon.adsTemplate.data.source.UserConsentDataSource
 import com.devaeon.adsTemplate.domain.model.AdState
 import com.devaeon.adsTemplate.domain.model.UserConsentState
 import com.devaeon.adsTemplate.domain.repository.AdsRepository
-import com.devaeon.adsTemplate.presentation.state.RemoteAdState
+import com.devaeon.adsTemplate.domain.model.RemoteAdState
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -27,13 +28,16 @@ import javax.inject.Singleton
 
 @Singleton
 class AdsRepositoryImpl @Inject internal constructor(
-    @ApplicationContext context: Context,
+    @ApplicationContext private val context: Context,
     @Dispatcher(HiltCoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
+    @Dispatcher(HiltCoroutineDispatchers.Main) mainDispatcher: CoroutineDispatcher,
     userConsentDataSource: UserConsentDataSource,
+    private val remoteAdsDataSource: RemoteAdsDataSource,
     private val interstitialAdsDataSource: InterstitialAdsDataSource
 ) : AdsRepository {
-    private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
 
+    private val coroutineScopeIo: CoroutineScope = CoroutineScope(SupervisorJob() + ioDispatcher)
+    private val coroutineScopeMain: CoroutineScope = CoroutineScope(SupervisorJob() + mainDispatcher)
 
     override val userConsentState: Flow<UserConsentState> =
         combine(
@@ -44,13 +48,13 @@ class AdsRepositoryImpl @Inject internal constructor(
 
     override val isPrivacySettingRequired: Flow<Boolean> = userConsentDataSource.isPrivacyOptionsRequired
 
-    override val adsState: StateFlow<AdState> = interstitialAdsDataSource .remoteAdState.map(::toAdState).stateIn(coroutineScopeIo, SharingStarted.Eagerly, AdState.NOT_INITIALIZED)
+    override val adsState: StateFlow<AdState> = interstitialAdsDataSource.remoteAdState.map(::toAdState)
+        .stateIn(coroutineScopeIo, SharingStarted.Eagerly, AdState.NOT_INITIALIZED)
 
 
     init {
         // Once the user has given his consent, initialize the ads sdk
         initAdsOnConsentFlow(context, userConsentDataSource.isUserConsentingForAds, adsState).launchIn(coroutineScopeIo)
-
     }
 
     private fun initAdsOnConsentFlow(context: Context, consent: Flow<Boolean>, adsState: Flow<AdState>): Flow<Unit> =
@@ -58,7 +62,7 @@ class AdsRepositoryImpl @Inject internal constructor(
             if (!isConsenting || state != AdState.NOT_INITIALIZED) return@combine
 
             Log.i(TAG, "User consenting for ads, initialize ads SDK")
-               interstitialAdsDataSource.initialize(context)
+            interstitialAdsDataSource.initialize(context)
         }
 
     private fun toUserConsentState(
@@ -85,7 +89,7 @@ class AdsRepositoryImpl @Inject internal constructor(
             RemoteAdState.Error.NoImpressionError -> AdState.ERROR
         }
 
-    override fun loadInterstitialAdIfNeeded(context: Context) {
+    override fun loadInterstitialAdIfNeeded() {
         interstitialAdsDataSource.loadAd(context)
     }
 
@@ -95,6 +99,10 @@ class AdsRepositoryImpl @Inject internal constructor(
             AdState.ERROR -> interstitialAdsDataSource.forceShown()
             else -> Unit
         }
+    }
+
+    override fun fetchRemoteConfiguration(fetchCallback: (Boolean) -> Unit) {
+        remoteAdsDataSource.checkRemoteConfig(fetchCallback)
     }
 }
 
