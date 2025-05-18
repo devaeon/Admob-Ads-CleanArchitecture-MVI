@@ -1,10 +1,15 @@
 package com.devaeon.adsTemplate.core.utilities.manager
 
+import android.content.Context
 import android.content.SharedPreferences
+import com.devaeon.adsTemplate.R
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 
-class SharedPreferenceUtils @Inject constructor(private val sharedPreferences: SharedPreferences) {
+class SharedPreferenceUtils @Inject constructor(@ApplicationContext private val context: Context) {
+
+    private val sharedPreferences by lazy { context.getSharedPreferences("app_prefs", Context.MODE_PRIVATE) }
 
     private val billingRequireKey = "isAppPurchased"
     private val isShowFirstScreenKey = "showFirstScreen"
@@ -82,6 +87,22 @@ class SharedPreferenceUtils @Inject constructor(private val sharedPreferences: S
         }
 
     /* ----- Interstitial Ads ----- */
+
+    private  val INTER_SPLASH_AD_UNIT="inter_splash_ad_unit"
+
+    val admobSplashInterstitialAdUnit = "admob_splash_interstitial_ad_unit"
+
+    var splashInterstitialAdUnit: String
+        get() = sharedPreferences.getString(
+            admobSplashInterstitialAdUnit,
+            context.resources.getString(R.string.admob_interstitial_ad_unit)
+        ) ?: ""
+        set(value) {
+            sharedPreferences.edit().apply {
+                putString(admobSplashInterstitialAdUnit, value)
+                apply()
+            }
+        }
 
     var rcInterFeature: Int
         get() = sharedPreferences.getInt(interFeature, 1)

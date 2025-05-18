@@ -16,6 +16,7 @@ interface IAdsSdk {
     @MainThread
     fun loadInterstitialAd(
         context: Context,
+        interAdId: String,
         onLoaded: () -> Unit,
         onError: (code: Int, message: String) -> Unit,
     )

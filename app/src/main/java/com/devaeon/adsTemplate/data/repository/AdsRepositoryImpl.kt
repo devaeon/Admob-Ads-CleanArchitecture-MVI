@@ -8,6 +8,7 @@ import com.devaeon.adsTemplate.data.source.RemoteAdsDataSource
 import com.devaeon.adsTemplate.data.source.UserConsentDataSource
 import com.devaeon.adsTemplate.di.Dispatcher
 import com.devaeon.adsTemplate.di.HiltCoroutineDispatchers
+import com.devaeon.adsTemplate.domain.enums.InterAdKey
 import com.devaeon.adsTemplate.domain.model.AdState
 import com.devaeon.adsTemplate.domain.model.UserConsentState
 import com.devaeon.adsTemplate.domain.repository.AdsRepository
@@ -31,7 +32,7 @@ class AdsRepositoryImpl @Inject internal constructor(
     @ApplicationContext private val context: Context,
     @Dispatcher(HiltCoroutineDispatchers.IO) ioDispatcher: CoroutineDispatcher,
     @Dispatcher(HiltCoroutineDispatchers.Main) mainDispatcher: CoroutineDispatcher,
-    userConsentDataSource: UserConsentDataSource,
+    private val userConsentDataSource: UserConsentDataSource,
     private val remoteAdsDataSource: RemoteAdsDataSource,
     private val interstitialAdsDataSource: InterstitialAdsDataSource
 ) : AdsRepository {
@@ -47,6 +48,11 @@ class AdsRepositoryImpl @Inject internal constructor(
         )
 
     override val isPrivacySettingRequired: Flow<Boolean> = userConsentDataSource.isPrivacyOptionsRequired
+
+
+    override fun startUserConsentRequestUiFlowIfNeeded(activity: Activity) {
+        userConsentDataSource.requestUserConsent(activity)
+    }
 
     override val adsState: StateFlow<AdState> = interstitialAdsDataSource.remoteAdState.map(::toAdState)
         .stateIn(coroutineScopeIo, SharingStarted.Eagerly, AdState.NOT_INITIALIZED)
@@ -89,8 +95,8 @@ class AdsRepositoryImpl @Inject internal constructor(
             RemoteAdState.Error.NoImpressionError -> AdState.ERROR
         }
 
-    override fun loadInterstitialAdIfNeeded() {
-        interstitialAdsDataSource.loadAd(context)
+    override fun loadInterstitialAdIfNeeded(interAdKey: InterAdKey) {
+        interstitialAdsDataSource.loadAd(context,interAdKey)
     }
 
     override fun showInterstitialAd(activity: Activity) {

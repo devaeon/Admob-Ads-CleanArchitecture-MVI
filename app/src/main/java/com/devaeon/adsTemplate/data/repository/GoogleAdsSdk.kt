@@ -3,6 +3,7 @@ package com.devaeon.adsTemplate.data.repository
 import android.app.Activity
 import android.content.Context
 import androidx.annotation.MainThread
+import androidx.annotation.NonNull
 import com.devaeon.adsTemplate.R
 import com.devaeon.adsTemplate.domain.repository.IAdsSdk
 import com.google.android.gms.ads.AdError
@@ -36,14 +37,16 @@ class GoogleAdsSdk @Inject constructor() : IAdsSdk {
     @MainThread
     override fun loadInterstitialAd(
         context: Context,
+        interAdId: String,
         onLoaded: () -> Unit,
         onError: (code: Int, message: String) -> Unit,
     ) = InterstitialAd.load(
         context,
-        context.getString(R.string.admob_interstitial_ad_unit),
+        interAdId,
         buildInterstitialAdRequest(),
         newAdLoadCallback(onLoaded, onError),
     )
+
 
     @MainThread
     override fun showInterstitialAd(
@@ -59,8 +62,7 @@ class GoogleAdsSdk @Inject constructor() : IAdsSdk {
         interstitialAd = null
     }
 
-    private fun buildInterstitialAdRequest(): AdRequest =
-        AdRequest.Builder().build()
+    private fun buildInterstitialAdRequest(): AdRequest = AdRequest.Builder().build()
 
     private fun newAdLoadCallback(onLoaded: () -> Unit, onError: (code: Int, message: String) -> Unit) =
         object : InterstitialAdLoadCallback() {
